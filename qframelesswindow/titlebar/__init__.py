@@ -3,7 +3,7 @@ import sys
 
 from PyQt5.QtCore import QEvent, Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget, QFrame, QBoxLayout
 
 from ..utils import startSystemMove
 from .title_bar_buttons import (CloseButton, MaximizeButton, MinimizeButton,
@@ -18,13 +18,34 @@ class TitleBar(QWidget):
         self.minBtn = MinimizeButton(parent=self)
         self.closeBtn = CloseButton(parent=self)
         self.maxBtn = MaximizeButton(parent=self)
-        self.hBoxLayout = QHBoxLayout(self)
+
         self._isDoubleClickEnabled = True
 
-        self.resize(200, 32)
-        self.setFixedHeight(32)
+        # own
+        self.outer_layout = QHBoxLayout(self)
+        self.outer_layout.setSpacing(0)
+        self.outer_layout.setContentsMargins(0, 0, 0, 0)
+        self.frame = QFrame(self)
+        self.frame.setObjectName("custom_title_bar_frame")
+        self.outer_layout.addWidget(self.frame)
+        self.frame.setFrameShape(QFrame.NoFrame)
+        self.frame.setFrameShadow(QFrame.Plain)
+        self.frame.setLineWidth(0)
+        self.frame_layout = QHBoxLayout(self.frame)
+        self.frame_layout.setSpacing(0)
+        self.frame_layout.setContentsMargins(0, 0, 0, 0)
+        self.frame_layout.addWidget(self.frame)
+        ####
+        # edited
+        # self.resize(200, 32)
+        # self.setFixedHeight(32)
+        self.setFixedHeight(35)
 
         # add buttons to layout
+        self.hBoxLayout = QHBoxLayout(self.frame)
+        self.hBoxLayout.setDirection(QBoxLayout.RightToLeft)
+
+        self.frame_layout.addLayout(self.hBoxLayout)
         self.hBoxLayout.setSpacing(0)
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.hBoxLayout.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
